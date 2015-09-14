@@ -57,9 +57,10 @@ import javax.swing.border.TitledBorder;
 import serverclient.CatBean;
 import serverclient.CatUtil;
 
+//设计聊天列表
 class CellRenderer extends JLabel implements ListCellRenderer {
 	CellRenderer() {
-		setOpaque(true);
+		setOpaque(true);//设置控件的透明
 	}
 
 	public Component getListCellRendererComponent(JList list, Object value,
@@ -72,7 +73,7 @@ class CellRenderer extends JLabel implements ListCellRenderer {
 			setIcon(new ImageIcon("images//1.jpg"));
 		}
 		if (isSelected) {
-			setBackground(new Color(255, 255, 153));// 设置背景色
+			setBackground(new Color(255, 255, 153));// 设置背景色(yellow)
 			setForeground(Color.black);
 		} else {
 			// 设置选取与取消选取的前景与背景颜色.
@@ -213,31 +214,34 @@ public class CatChatroom extends JFrame {
 		list = new JList(listmodel);
 		list.setCellRenderer(new CellRenderer());
 		list.setOpaque(false);
+		
+		//聊天用户列表标题部分设计
 		Border etch = BorderFactory.createEtchedBorder();
 		list.setBorder(BorderFactory.createTitledBorder(etch, "<"+u_name+">"
 				+ "在线客户:", TitledBorder.LEADING, TitledBorder.TOP, new Font(
 				"sdf", Font.BOLD, 20), Color.green));
 
+		
 		JScrollPane scrollPane_2 = new JScrollPane(list);
 		scrollPane_2.setBounds(430, 10, 245, 375);
 		scrollPane_2.setOpaque(false);
 		scrollPane_2.getViewport().setOpaque(false);
 		getContentPane().add(scrollPane_2);
 
-		// 文件传输栏
-		progressBar = new JProgressBar();
-		progressBar.setBounds(430, 390, 245, 15);
-		progressBar.setMinimum(1);
-		progressBar.setMaximum(100);
-		getContentPane().add(progressBar);
-
-		// 文件传输提示
-		lblNewLabel = new JLabel(
-				"\u6587\u4EF6\u4F20\u9001\u4FE1\u606F\u680F:");
-		lblNewLabel.setFont(new Font("SimSun", Font.PLAIN, 12));
-		lblNewLabel.setBackground(Color.WHITE);
-		lblNewLabel.setBounds(430, 410, 245, 15);
-		getContentPane().add(lblNewLabel);
+//		// 文件传输栏
+//		progressBar = new JProgressBar();
+//		progressBar.setBounds(430, 390, 245, 15);
+//		progressBar.setMinimum(1);
+//		progressBar.setMaximum(100);
+//		getContentPane().add(progressBar);
+//
+//		// 文件传输提示
+//		lblNewLabel = new JLabel(
+//				"\u6587\u4EF6\u4F20\u9001\u4FE1\u606F\u680F:");
+//		lblNewLabel.setFont(new Font("SimSun", Font.PLAIN, 12));
+//		lblNewLabel.setBackground(Color.WHITE);
+//		lblNewLabel.setBounds(430, 410, 245, 15);
+//		getContentPane().add(lblNewLabel);
 
 		try {
 			oos = new ObjectOutputStream(clientSocket.getOutputStream());
@@ -345,54 +349,54 @@ public class CatChatroom extends JFrame {
 		});
 
 		// 列表监听
-		list.addMouseListener(new MouseAdapter() {
-
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				List to = list.getSelectedValuesList();
-				if (e.getClickCount() == 2) {
-					
-					if (to.toString().contains(name+"(我)")) {
-						JOptionPane
-								.showMessageDialog(getContentPane(), "不能向自己发送文件");
-						return;
-					}
-					
-					// 双击打开文件文件选择框
-					JFileChooser chooser = new JFileChooser();
-					chooser.setDialogTitle("选择文件框"); // 标题哦...
-					chooser.showDialog(getContentPane(), "选择"); // 这是按钮的名字..
-
-					// 判定是否选择了文件
-					if (chooser.getSelectedFile() != null) {
-						// 获取路径
-						filePath = chooser.getSelectedFile().getPath();
-						File file = new File(filePath);
-						// 文件为空
-						if (file.length() == 0) {
-							JOptionPane.showMessageDialog(getContentPane(),
-									filePath + "文件为空,不允许发送.");
-							return;
-						}
-
-						CatBean clientBean = new CatBean();
-						clientBean.setType(2);// 请求发送文件
-						clientBean.setSize(new Long(file.length()).intValue());
-						clientBean.setName(name);
-						clientBean.setTimer(CatUtil.getTimer());
-						clientBean.setFileName(file.getName()); // 记录文件的名称
-						clientBean.setInfo("请求发送文件");
-
-						// 判断要发送给谁
-						HashSet<String> set = new HashSet<String>();
-						set.addAll(list.getSelectedValuesList());
-						clientBean.setClients(set);
-						sendMessage(clientBean);
-					}
-				}
-			}
-		});
-
+//		list.addMouseListener(new MouseAdapter() {
+//
+//			@Override
+//			public void mouseClicked(MouseEvent e) {
+//				List to = list.getSelectedValuesList();
+//				if (e.getClickCount() == 2) {
+//					
+//					if (to.toString().contains(name+"(我)")) {
+//						JOptionPane
+//								.showMessageDialog(getContentPane(), "不能向自己发送文件");
+//						return;
+//					}
+//					
+//					// 双击打开文件文件选择框
+//					JFileChooser chooser = new JFileChooser();
+//					chooser.setDialogTitle("选择文件框"); // 标题哦...
+//					chooser.showDialog(getContentPane(), "选择"); // 这是按钮的名字..
+//
+//					// 判定是否选择了文件
+//					if (chooser.getSelectedFile() != null) {
+//						// 获取路径
+//						filePath = chooser.getSelectedFile().getPath();
+//						File file = new File(filePath);
+//						// 文件为空
+//						if (file.length() == 0) {
+//							JOptionPane.showMessageDialog(getContentPane(),
+//									filePath + "文件为空,不允许发送.");
+//							return;
+//						}
+//
+//						CatBean clientBean = new CatBean();
+//						clientBean.setType(2);// 请求发送文件
+//						clientBean.setSize(new Long(file.length()).intValue());
+//						clientBean.setName(name);
+//						clientBean.setTimer(CatUtil.getTimer());
+//						clientBean.setFileName(file.getName()); // 记录文件的名称
+//						clientBean.setInfo("请求发送文件");
+//
+//						// 判断要发送给谁
+//						HashSet<String> set = new HashSet<String>();
+//						set.addAll(list.getSelectedValuesList());
+//						clientBean.setClients(set);
+//						sendMessage(clientBean);
+//					}
+//				}
+//			}
+//		});
+//
 	}
 
 	class ClientInputThread extends Thread {
@@ -404,7 +408,9 @@ public class CatChatroom extends JFrame {
 				while (true) {
 					ois = new ObjectInputStream(clientSocket.getInputStream());
 					final CatBean  bean = (CatBean) ois.readObject();
+					
 					switch (bean.getType()) {
+					
 					case 0: {
 						// 更新列表
 						onlines.clear();
@@ -442,193 +448,194 @@ public class CatChatroom extends JFrame {
 						textArea.selectAll();
 						break;
 					}
-					case 2: {
-						// 由于等待目标客户确认是否接收文件是个阻塞状态，所以这里用线程处理
-						new Thread(){
-							public void run() {
-								//显示是否接收文件对话框
-								int result = JOptionPane.showConfirmDialog(
-										getContentPane(), bean.getInfo());
-								switch(result){
-								case 0:{  //接收文件
-									JFileChooser chooser = new JFileChooser();
-									chooser.setDialogTitle("保存文件框"); // 标题哦...
-									//默认文件名称还有放在当前目录下
-									chooser.setSelectedFile(new File(bean
-											.getFileName()));
-									chooser.showDialog(getContentPane(), "保存"); // 这是按钮的名字..
-									//保存路径
-									String saveFilePath =chooser.getSelectedFile().toString();
-								
-									//创建客户CatBean
-									CatBean clientBean = new CatBean();
-									clientBean.setType(3);
-									clientBean.setName(name);  //接收文件的客户名字
-									clientBean.setTimer(CatUtil.getTimer());
-									clientBean.setFileName(saveFilePath);
-									clientBean.setInfo("确定接收文件");
-
-									// 判断要发送给谁
-									HashSet<String> set = new HashSet<String>();
-									set.add(bean.getName());
-									clientBean.setClients(set);  //文件来源
-									clientBean.setTo(bean.getClients());//给这些客户发送文件
-									
-									
-									
-									// 创建新的tcp socket 接收数据, 这是额外增加的功能, 大家请留意...
-									try {
-										ServerSocket ss = new ServerSocket(0); // 0可以获取空闲的端口号
-										
-										clientBean.setIp(clientSocket.getInetAddress().getHostAddress());
-										clientBean.setPort(ss.getLocalPort());
-										sendMessage(clientBean); // 先通过服务器告诉发送方, 你可以直接发送文件到我这里了...
-										
-										
-										
-										isReceiveFile=true;
-										//等待文件来源的客户，输送文件....目标客户从网络上读取文件，并写在本地上
-										Socket sk = ss.accept();
-                                        textArea.append(CatUtil.getTimer() + "  " + bean.getFileName()
-												+ "文件保存中.\r\n");
-										DataInputStream dis = new DataInputStream(  //从网络上读取文件
-												new BufferedInputStream(sk.getInputStream()));
-										DataOutputStream dos = new DataOutputStream(  //写在本地上
-												new BufferedOutputStream(new FileOutputStream(
-														saveFilePath)));
-				
-										int count = 0;
-										int num = bean.getSize() / 100;
-										int index = 0;
-										while (count < bean.getSize()) {
-											int t = dis.read();
-											dos.write(t);
-											count++;
-											
-											if(num>0){
-												if (count % num == 0 && index < 100) {
-													progressBar.setValue(++index);
-												}
-												lblNewLabel.setText("下载进度:" + count
-														+ "/" + bean.getSize() + "  整体" + index
-														+ "%");
-											}else{
-												lblNewLabel.setText("下载进度:" + count
-														+ "/" + bean.getSize() +"  整体:"+new Double(new Double(count).doubleValue()/new Double(bean.getSize()).doubleValue()*100).intValue()+"%");
-												if(count==bean.getSize()){
-													progressBar.setValue(100);
-												}
-											}
-				
-										}
-										
-										//给文件来源客户发条提示，文件保存完毕
-										PrintWriter out = new PrintWriter(sk.getOutputStream(),true);
-										out.println(CatUtil.getTimer() + " 发送给"+name+"的文件[" + bean.getFileName()+"]"
-												+ "文件保存完毕.\r\n");
-										out.flush();
-										dos.flush();
-										dos.close();
-										out.close();
-										dis.close();
-										sk.close();
-										ss.close();
-										textArea.append(CatUtil.getTimer() + "  " + bean.getFileName()
-												+ "文件保存完毕.存放位置为:"+saveFilePath+"\r\n");
-										isReceiveFile = false;
-									} catch (Exception e) {
-										e.printStackTrace();
-									}
-									
-									break;
-								}
-								default: {
-									CatBean clientBean = new CatBean();
-									clientBean.setType(4);
-									clientBean.setName(name);  //接收文件的客户名字
-									clientBean.setTimer(CatUtil.getTimer());
-									clientBean.setFileName(bean.getFileName());
-									clientBean.setInfo(CatUtil.getTimer() + "  "
-											+ name + "取消接收文件["
-											+ bean.getFileName() + "]");
-
-
-									// 判断要发送给谁
-									HashSet<String> set = new HashSet<String>();
-									set.add(bean.getName());
-									clientBean.setClients(set);  //文件来源
-									clientBean.setTo(bean.getClients());//给这些客户发送文件
-									
-									sendMessage(clientBean);
-								 	
-									break;
-								
-								}
-							}
-							};	
-						}.start();
-						break;
-					}
-					case 3: {  //目标客户愿意接收文件，源客户开始读取本地文件并发送到网络上
-						textArea.append(bean.getTimer() + "  "+ bean.getName() + "确定接收文件" + ",文件传送中..\r\n");
-						new Thread(){
-							public void run() {
-								
-								try {
-									isSendFile = true;
-									//创建要接收文件的客户套接字
-									Socket s = new Socket(bean.getIp(),bean.getPort());
-									DataInputStream dis = new DataInputStream(
-											new FileInputStream(filePath));  //本地读取该客户刚才选中的文件
-									DataOutputStream dos = new DataOutputStream(
-											new BufferedOutputStream(s
-													.getOutputStream()));  //网络写出文件
-									
-								
-									int size = dis.available();
-									
-									int count = 0;  //读取次数
-									int num = size / 100;
-									int index = 0;
-									while (count < size) {
-										
-										int t = dis.read();
-										dos.write(t);
-										count++;  //每次只读取一个字节
-
-										if(num>0){
-											if (count % num == 0 && index < 100) {
-												progressBar.setValue(++index);
-	
-											}
-											lblNewLabel.setText("上传进度:" + count + "/"
-															+ size + "  整体" + index
-															+ "%");
-										}else{
-											lblNewLabel.setText("上传进度:" + count + "/"
-													+ size +"  整体:"+new Double(new Double(count).doubleValue()/new Double(size).doubleValue()*100).intValue()+"%"
-													);
-											if(count==size){
-												progressBar.setValue(100);
-											}
-										}
-									}
-									dos.flush();
-									dis.close();
-								  //读取目标客户的提示保存完毕的信息...
-								    BufferedReader br = new BufferedReader(new InputStreamReader(s.getInputStream()));
-								    textArea.append( br.readLine() + "\r\n");
-								    isSendFile = false;
-									br.close();
-								    s.close();
-								} catch (Exception ex) {
-									ex.printStackTrace();
-								}
-							
-							};
-						}.start();
-						break;
-					}
+					//暂时删除传输文件功能
+//					case 2: {
+//						// 由于等待目标客户确认是否接收文件是个阻塞状态，所以这里用线程处理
+//						new Thread(){
+//							public void run() {
+//								//显示是否接收文件对话框
+//								int result = JOptionPane.showConfirmDialog(
+//										getContentPane(), bean.getInfo());
+//								switch(result){
+//								case 0:{  //接收文件
+//									JFileChooser chooser = new JFileChooser();
+//									chooser.setDialogTitle("保存文件框"); // 标题哦...
+//									//默认文件名称还有放在当前目录下
+//									chooser.setSelectedFile(new File(bean
+//											.getFileName()));
+//									chooser.showDialog(getContentPane(), "保存"); // 这是按钮的名字..
+//									//保存路径
+//									String saveFilePath =chooser.getSelectedFile().toString();
+//								
+//									//创建客户CatBean
+//									CatBean clientBean = new CatBean();
+//									clientBean.setType(3);
+//									clientBean.setName(name);  //接收文件的客户名字
+//									clientBean.setTimer(CatUtil.getTimer());
+//									clientBean.setFileName(saveFilePath);
+//									clientBean.setInfo("确定接收文件");
+//
+//									// 判断要发送给谁
+//									HashSet<String> set = new HashSet<String>();
+//									set.add(bean.getName());
+//									clientBean.setClients(set);  //文件来源
+//									clientBean.setTo(bean.getClients());//给这些客户发送文件
+//									
+//									
+//									
+//									// 创建新的tcp socket 接收数据, 这是额外增加的功能, 大家请留意...
+//									try {
+//										ServerSocket ss = new ServerSocket(0); // 0可以获取空闲的端口号
+//										
+//										clientBean.setIp(clientSocket.getInetAddress().getHostAddress());
+//										clientBean.setPort(ss.getLocalPort());
+//										sendMessage(clientBean); // 先通过服务器告诉发送方, 你可以直接发送文件到我这里了...
+//										
+//										
+//										
+//										isReceiveFile=true;
+//										//等待文件来源的客户，输送文件....目标客户从网络上读取文件，并写在本地上
+//										Socket sk = ss.accept();
+//                                        textArea.append(CatUtil.getTimer() + "  " + bean.getFileName()
+//												+ "文件保存中.\r\n");
+//										DataInputStream dis = new DataInputStream(  //从网络上读取文件
+//												new BufferedInputStream(sk.getInputStream()));
+//										DataOutputStream dos = new DataOutputStream(  //写在本地上
+//												new BufferedOutputStream(new FileOutputStream(
+//														saveFilePath)));
+//				
+//										int count = 0;
+//										int num = bean.getSize() / 100;
+//										int index = 0;
+//										while (count < bean.getSize()) {
+//											int t = dis.read();
+//											dos.write(t);
+//											count++;
+//											
+//											if(num>0){
+//												if (count % num == 0 && index < 100) {
+//													progressBar.setValue(++index);
+//												}
+//												lblNewLabel.setText("下载进度:" + count
+//														+ "/" + bean.getSize() + "  整体" + index
+//														+ "%");
+//											}else{
+//												lblNewLabel.setText("下载进度:" + count
+//														+ "/" + bean.getSize() +"  整体:"+new Double(new Double(count).doubleValue()/new Double(bean.getSize()).doubleValue()*100).intValue()+"%");
+//												if(count==bean.getSize()){
+//													progressBar.setValue(100);
+//												}
+//											}
+//				
+//										}
+//										
+//										//给文件来源客户发条提示，文件保存完毕
+//										PrintWriter out = new PrintWriter(sk.getOutputStream(),true);
+//										out.println(CatUtil.getTimer() + " 发送给"+name+"的文件[" + bean.getFileName()+"]"
+//												+ "文件保存完毕.\r\n");
+//										out.flush();
+//										dos.flush();
+//										dos.close();
+//										out.close();
+//										dis.close();
+//										sk.close();
+//										ss.close();
+//										textArea.append(CatUtil.getTimer() + "  " + bean.getFileName()
+//												+ "文件保存完毕.存放位置为:"+saveFilePath+"\r\n");
+//										isReceiveFile = false;
+//									} catch (Exception e) {
+//										e.printStackTrace();
+//									}
+//									
+//									break;
+//								}
+//								default: {
+//									CatBean clientBean = new CatBean();
+//									clientBean.setType(4);
+//									clientBean.setName(name);  //接收文件的客户名字
+//									clientBean.setTimer(CatUtil.getTimer());
+//									clientBean.setFileName(bean.getFileName());
+//									clientBean.setInfo(CatUtil.getTimer() + "  "
+//											+ name + "取消接收文件["
+//											+ bean.getFileName() + "]");
+//
+//
+//									// 判断要发送给谁
+//									HashSet<String> set = new HashSet<String>();
+//									set.add(bean.getName());
+//									clientBean.setClients(set);  //文件来源
+//									clientBean.setTo(bean.getClients());//给这些客户发送文件
+//									
+//									sendMessage(clientBean);
+//								 	
+//									break;
+//								
+//								}
+//							}
+//							};	
+//						}.start();
+//						break;
+//					}
+//					case 3: {  //目标客户愿意接收文件，源客户开始读取本地文件并发送到网络上
+//						textArea.append(bean.getTimer() + "  "+ bean.getName() + "确定接收文件" + ",文件传送中..\r\n");
+//						new Thread(){
+//							public void run() {
+//								
+//								try {
+//									isSendFile = true;
+//									//创建要接收文件的客户套接字
+//									Socket s = new Socket(bean.getIp(),bean.getPort());
+//									DataInputStream dis = new DataInputStream(
+//											new FileInputStream(filePath));  //本地读取该客户刚才选中的文件
+//									DataOutputStream dos = new DataOutputStream(
+//											new BufferedOutputStream(s
+//													.getOutputStream()));  //网络写出文件
+//									
+//								
+//									int size = dis.available();
+//									
+//									int count = 0;  //读取次数
+//									int num = size / 100;
+//									int index = 0;
+//									while (count < size) {
+//										
+//										int t = dis.read();
+//										dos.write(t);
+//										count++;  //每次只读取一个字节
+//
+//										if(num>0){
+//											if (count % num == 0 && index < 100) {
+//												progressBar.setValue(++index);
+//	
+//											}
+//											lblNewLabel.setText("上传进度:" + count + "/"
+//															+ size + "  整体" + index
+//															+ "%");
+//										}else{
+//											lblNewLabel.setText("上传进度:" + count + "/"
+//													+ size +"  整体:"+new Double(new Double(count).doubleValue()/new Double(size).doubleValue()*100).intValue()+"%"
+//													);
+//											if(count==size){
+//												progressBar.setValue(100);
+//											}
+//										}
+//									}
+//									dos.flush();
+//									dis.close();
+//								  //读取目标客户的提示保存完毕的信息...
+//								    BufferedReader br = new BufferedReader(new InputStreamReader(s.getInputStream()));
+//								    textArea.append( br.readLine() + "\r\n");
+//								    isSendFile = false;
+//									br.close();
+//								    s.close();
+//								} catch (Exception ex) {
+//									ex.printStackTrace();
+//								}
+//							
+//							};
+//						}.start();
+//						break;
+//					}
 					case 4: {
 						textArea.append(bean.getInfo() + "\r\n");
 						break;
