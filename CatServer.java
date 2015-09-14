@@ -112,53 +112,54 @@ public class CatServer {
 						sendMessage(serverBean);
 						break;
 					}
-					case 2: { // 请求接受文件
-						// 创建服务器的catbean，并发送给客户端
-						CatBean serverBean = new CatBean();
-						String info = bean.getTimer() + "  " + bean.getName()
-								+ "向你传送文件,是否需要接受";
-
-						serverBean.setType(2);
-						serverBean.setClients(bean.getClients()); // 这是发送的目的地
-						serverBean.setFileName(bean.getFileName()); // 文件名称
-						serverBean.setSize(bean.getSize()); // 文件大小
-						serverBean.setInfo(info);
-						serverBean.setName(bean.getName()); // 来源
-						serverBean.setTimer(bean.getTimer());
-						// 向选中的客户发送数据
-						sendMessage(serverBean);
-
-						break;
-					}
-					case 3: { // 确定接收文件
-						CatBean serverBean = new CatBean();
-
-						serverBean.setType(3);
-						serverBean.setClients(bean.getClients()); // 文件来源
-						serverBean.setTo(bean.getTo()); // 文件目的地
-						serverBean.setFileName(bean.getFileName()); // 文件名称
-						serverBean.setIp(bean.getIp());
-						serverBean.setPort(bean.getPort());
-						serverBean.setName(bean.getName()); // 接收的客户名称
-						serverBean.setTimer(bean.getTimer());
-						// 通知文件来源的客户，对方确定接收文件
-						sendMessage(serverBean);
-						break;
-					}
-					case 4: {
-						CatBean serverBean = new CatBean();
-
-						serverBean.setType(4);
-						serverBean.setClients(bean.getClients()); // 文件来源
-						serverBean.setTo(bean.getTo()); // 文件目的地
-						serverBean.setFileName(bean.getFileName());
-						serverBean.setInfo(bean.getInfo());
-						serverBean.setName(bean.getName());// 接收的客户名称
-						serverBean.setTimer(bean.getTimer());
-						sendMessage(serverBean);
-
-						break;
-					}
+					//暂时舍弃文件传输功能
+//					case 2: { // 请求接受文件
+//						// 创建服务器的catbean，并发送给客户端
+//						CatBean serverBean = new CatBean();
+//						String info = bean.getTimer() + "  " + bean.getName()
+//								+ "向你传送文件,是否需要接受";
+//
+//						serverBean.setType(2);
+//						serverBean.setClients(bean.getClients()); // 这是发送的目的地
+//						serverBean.setFileName(bean.getFileName()); // 文件名称
+//						serverBean.setSize(bean.getSize()); // 文件大小
+//						serverBean.setInfo(info);
+//						serverBean.setName(bean.getName()); // 来源
+//						serverBean.setTimer(bean.getTimer());
+//						// 向选中的客户发送数据
+//						sendMessage(serverBean);
+//
+//						break;
+//					}
+//					case 3: { // 确定接收文件
+//						CatBean serverBean = new CatBean();
+//
+//						serverBean.setType(3);
+//						serverBean.setClients(bean.getClients()); // 文件来源
+//						serverBean.setTo(bean.getTo()); // 文件目的地
+//						serverBean.setFileName(bean.getFileName()); // 文件名称
+//						serverBean.setIp(bean.getIp());
+//						serverBean.setPort(bean.getPort());
+//						serverBean.setName(bean.getName()); // 接收的客户名称
+//						serverBean.setTimer(bean.getTimer());
+//						// 通知文件来源的客户，对方确定接收文件
+//						sendMessage(serverBean);
+//						break;
+//					}
+//					case 4: {
+//						CatBean serverBean = new CatBean();
+//
+//						serverBean.setType(4);
+//						serverBean.setClients(bean.getClients()); // 文件来源
+//						serverBean.setTo(bean.getTo()); // 文件目的地
+//						serverBean.setFileName(bean.getFileName());
+//						serverBean.setInfo(bean.getInfo());
+//						serverBean.setName(bean.getName());// 接收的客户名称
+//						serverBean.setTimer(bean.getTimer());
+//						sendMessage(serverBean);
+//
+//						break;
+//					}
 					default: {
 						break;
 					}
@@ -190,7 +191,7 @@ public class CatServer {
 					try {
 						oos = new ObjectOutputStream(c.getOutputStream());
 						oos.writeObject(serverBean);
-						oos.flush();
+						oos.flush();//不可少，强行把信息写入内存
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
@@ -240,7 +241,8 @@ public class CatServer {
 			}
 		}
 	}
-
+	
+//一直在等待客户端的请求
 	public void start() {
 		try {
 			while (true) {
